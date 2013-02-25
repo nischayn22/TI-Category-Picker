@@ -82,12 +82,49 @@ $wgExtensionFunctions[] = function () {
  * 
  * @return array
  */
-function ticp( $cur_value, $input_name, $is_mandatory, $is_disabled, array $field_args ){
+function ticp( $cur_value, $input_name, $is_mandatory, $is_disabled, array $field_args ) {
 	global $wgOut;
+
 	$wgOut->addModules( 'ext.ticp' );
+
+	$topCategory = $field_args['top_category'];
+	$categoryList = array();
+	if( $cur_value !== '' ) {
+		traverseUp( $cur_value, $topCategory, $categoryList );
+		$categoryList = array_reverse( $categoryList );
+		$categoryList[] = $cur_value;
+	}
+//dieq($categoryList);
 	$html = '
-		<div class="ticp" top_cat="'. $field_args['top_category'] .'">
-			<input class="ticp-input" name="' . htmlspecialchars( $input_name ) . '" cols="4" rows="2" style= "display:none;"></input>
+		<div class="ticp" top_cat="'. $topCategory .'" current_category_tree=' . FormatJson::encode( $categoryList ) . '>
+			<input class="ticp-input" value="' . $cur_value . '" name="' . htmlspecialchars( $input_name ) . '" cols="4" rows="2" style= "display:none;"></input>
 		</div>';
+
 	return $html;
+}
+
+function traverseUp( $startCategory, $topCategory, &$categoryList ) {
+	global $wgRequest;
+	$api = new ApiMain(
+			new DerivativeRequest(
+				$wgRequest,
+				array(
+					'action' => 'query',
+					'prop' => 'categories',
+					'titles' => 'Category:' . $startCategory,
+					'limit' => 1
+				),
+				false // was posted?
+			),
+			false // enable write?
+		);
+
+	$api->execute();
+	$data = $api->getResultData();
+	$presentCategory = array_shift( $data['query']['pages'] )['categories'][0]['title'];
+	$presentCategory = str_replace( 'Category:', '', $presentCategory );
+	if( $presentCategory !== $topCategory ) {
+		$categoryList[] = $presentCategory;
+		traverseUp( $presentCategory,$topCategory, $categoryList );
+	}
 }
