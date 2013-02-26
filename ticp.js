@@ -111,7 +111,7 @@ var ticp = {
 		});
 	},
 
-	loadnext: function() {
+	loadnext: function( e, callback ) {
 		_this = $( this );
 		selectedText = _this.find( ":selected" ).val();
 		dropdownId = parseInt( _this.attr( 'dropdownId' ) );
@@ -149,6 +149,10 @@ var ticp = {
 				}
 			}
 			ticp.setFormInputValue( selectedText );
+
+			if( typeof callback === "function" ) {
+				callback();
+			}
 		}
 	},
 
@@ -166,19 +170,25 @@ var ticp = {
 	},
 
 	setCurrentValue: function() {
-		// var j = 0;
-		// $tree = JSON.parse( $( '.ticp' ).attr( 'current_category_tree' ) );
-		// $.each( $tree, function( i, category ) {
-			// j++;
-			// $( 'select#ticp[dropdownId=' + j + '] option[value=' + category + ']' ).attr("selected", "selected");
-			// $.when( $( 'select#ticp[dropdownId=' + j + ']' ).triggerHandler( 'change' ).done(function() {
-				// continue;
-			// });
-		// }
+		var j = 0;
+		$tree = JSON.parse( $( '.ticp' ).attr( 'current_category_tree' ) );
+		$( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
+
+		$( 'select#ticp[dropdownId="1"]' ).trigger( 'change', function () {
+			$( 'select#ticp[dropdownId="2"]' ).find( 'option[value="' + $tree[1] + '"]' ).attr( 'selected', 'selected' );
+		});
+
+		$( 'select#ticp[dropdownId="2"]' ).trigger( 'change', function () {
+			$( 'select#ticp[dropdownId="3"]' ).find( 'option[value="' + $tree[ $tree.length -2 ] + '"]' ).attr( 'selected', 'selected' );
+		});
+
+		$( 'select#ticp[dropdownId="3"]' ).trigger( 'change', function () {
+			$( 'select#ticp[dropdownId="4"]' ).find( 'option[value="' + $tree[ $tree.length -1 ] + '"]' ).attr( 'selected', 'selected' );
+		});
 	}
 
 };
 
 ticp.init();
-//ticp.setCurrentValue();
+ticp.setCurrentValue();
 } )( jQuery, mediaWiki );
