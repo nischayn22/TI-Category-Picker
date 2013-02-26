@@ -81,18 +81,62 @@ var ticp = {
 		});
 	},
 
+	addDescendants: function( categoryName, options ) {
+		$.ajax({
+			url: mw.util.wikiScript( 'api' ),
+			async: false,
+			data: {
+				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
+				format: 'json',
+				action: 'query',
+				list: 'categorymembers',
+				cmtitle: 'Category:' + categoryName,
+				cmtype: 'subcat',
+			},
+			dataType: 'json',
+			type: 'GET',
+			success: function( data ) {
+				if ( data && data.query && data.query.categorymembers ) {
+					if (data.query.categorymembers.length == 0 ) {
+						options.push( $('<option></option>').val( categoryName ).html( categoryName ) );
+						return;
+					}
+
+					$.each( data.query.categorymembers, function( i, member ) {
+						subCategoryName = member.title.replace( 'Category:', '' );
+						ticp.addDescendants( subCategoryName, options );
+					});
+				}
+			}
+		});
+	},
+
 	loadnext: function() {
 		_this = $( this );
 		selectedText = _this.find( ":selected" ).val();
 		dropdownId = parseInt( _this.attr( 'dropdownId' ) );
 		ticp.removeInvalidDropDowns( dropdownId + 1 );
 		if ( selectedText !== '' ) {
-			if( dropdownId !== 2 ) {
+			if( dropdownId < 2 ) {
 				ticp.addNewDropDown( selectedText, dropdownId + 1 );
-			} else {
+			} else if ( dropdownId === 2 ) {
 				var options = [], offset = '';
 				ticp.addCategoryTree( selectedText, options, offset );
 				var select = $( '<select id="ticp" dropdownId="3"></select>' );
+				select.append( $('<option></option>').html( '' ) );
+				$.each( options, function( index, element ) {
+					select.append(element);
+				});
+				select.bind('change', ticp.loadnext );
+				if ( select.find( 'option' ).length > 1 ) {
+					$( $.find( '.ticp' ) ).append( select );
+				} else {
+					alert( 'no more categories' );
+				}
+			} else if ( dropdownId == 3 ) {
+				var options = [];
+				ticp.addDescendants( selectedText, options );
+				var select = $( '<select id="ticp" dropdownId="4"></select>' );
 				select.append( $('<option></option>').html( '' ) );
 				$.each( options, function( index, element ) {
 					select.append(element);

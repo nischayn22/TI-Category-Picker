@@ -104,27 +104,27 @@ function ticp( $cur_value, $input_name, $is_mandatory, $is_disabled, array $fiel
 }
 
 function traverseUp( $startCategory, $topCategory, &$categoryList ) {
-	global $wgRequest;
-	$api = new ApiMain(
-			new DerivativeRequest(
-				$wgRequest,
-				array(
-					'action' => 'query',
-					'prop' => 'categories',
-					'titles' => 'Category:' . $startCategory,
-					'limit' => 1
-				),
-				false // was posted?
-			),
-			false // enable write?
-		);
+	// global $wgRequest;
+	// $api = new ApiMain(
+			// new DerivativeRequest(
+				// $wgRequest,
+				// array(
+					// 'action' => 'query',
+					// 'prop' => 'categories',
+					// 'titles' => 'Category:' . $startCategory,
+					// 'limit' => 1
+				// ),
+				// false // was posted?
+			// ),
+			// false // enable write?
+		// );
 
-	$api->execute();
-	$data = $api->getResultData();
-	$presentCategory = array_shift( $data['query']['pages'] )['categories'][0]['title'];
-	$presentCategory = str_replace( 'Category:', '', $presentCategory );
-	if( $presentCategory !== $topCategory ) {
-		$categoryList[] = $presentCategory;
-		traverseUp( $presentCategory,$topCategory, $categoryList );
-	}
+	// $api->execute();
+	// $data = $api->getResultData();
+	// $presentCategory = array_shift( $data['query']['pages'] )['categories'][0]['title'];
+	// $presentCategory = str_replace( 'Category:', '', $presentCategory );
+	// if( $presentCategory !== $topCategory ) {
+		// $categoryList[] = $presentCategory;
+		// traverseUp( $presentCategory,$topCategory, $categoryList );
+	// }
 }
