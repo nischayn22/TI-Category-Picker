@@ -92,7 +92,7 @@ function ticp( $cur_value, $input_name, $is_mandatory, $is_disabled, array $fiel
 	if( $cur_value !== '' ) {
 		traverseUp( $cur_value, $topCategory, $categoryList );
 		$categoryList = array_reverse( $categoryList );
-		$categoryList[] = str_replace( ' ','&nbsp;' ,$cur_value );
+		$categoryList[] = str_replace( ' ','_' ,$cur_value );
 	}
 
 	$html = '
@@ -124,7 +124,7 @@ function traverseUp( $startCategory, $topCategory, &$categoryList ) {
 	$presentCategory = array_shift( $data['query']['pages'] )['categories'][0]['title'];
 	$presentCategory = str_replace( 'Category:', '', $presentCategory );
 	if( $presentCategory !== $topCategory ) {
-		$categoryList[] = urlencode( $presentCategory );
+		$categoryList[] = str_replace( ' ', '_',$presentCategory );
 		traverseUp( $presentCategory,$topCategory, $categoryList );
 	}
 }

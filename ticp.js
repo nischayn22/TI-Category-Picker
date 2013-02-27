@@ -68,12 +68,16 @@ var ticp = {
 					if (data.query.categorymembers.length == 0 ) {
 						return;
 					}
-					if( offset !== '' )
+					if( offset !== -1 )
 						options.push( $('<option></option>').val( categoryName ).html( offset + categoryName ) );
 
 					$.each( data.query.categorymembers, function( i, member ) {
 						subCategoryName = member.title.replace( 'Category:', '' );
-						offset = offset  + '&nbsp;&nbsp;';
+						if( offset == -1 ) {
+							offset = '';
+						} else {
+							offset = offset  + '&nbsp;&nbsp;';
+						}
 						ticp.addCategoryTree( subCategoryName, options, offset );
 					});
 				}
@@ -120,7 +124,7 @@ var ticp = {
 			if( dropdownId < 2 ) {
 				ticp.addNewDropDown( selectedText, dropdownId + 1 );
 			} else if ( dropdownId === 2 ) {
-				var options = [], offset = '';
+				var options = [], offset = -1;
 				ticp.addCategoryTree( selectedText, options, offset );
 				var select = $( '<select id="ticp" dropdownId="3"></select>' );
 				select.append( $('<option></option>').html( '' ) );
@@ -172,6 +176,9 @@ var ticp = {
 	setCurrentValue: function() {
 		var j = 0;
 		$tree = JSON.parse( $( '.ticp' ).attr( 'current_category_tree' ) );
+		$.each( $tree, function ( i, item ) {
+			$tree[i] = item.replace( '_', ' ' );
+		});
 		$( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
 
 		$( 'select#ticp[dropdownId="1"]' ).trigger( 'change', function () {
