@@ -98,7 +98,7 @@ function ticp( $cur_value, $input_name, $is_mandatory, $is_disabled, array $fiel
 	$html = '
 		<div class="ticp" top_cat="'. $topCategory .'" current_category_tree=' . FormatJson::encode( $categoryList ) . '>
 			<input class="ticp-input" value="' . $cur_value . '" name="' . htmlspecialchars( $input_name ) . '" cols="4" rows="2" style= "display:none;"></input>
-		</div>';
+		</div> <div class="ticp-warning"  style="display:none;" ><b style="color:grey; display:block; padding:3px;" > No more categories </b></div>';
 
 	return $html;
 }

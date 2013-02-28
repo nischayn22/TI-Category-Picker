@@ -26,4 +26,4 @@ To use this extension you can use the form input name 'TI Category Input' like t
 
 {{{field|category|top category=Products|input type=TI Category Picker}}}
 
-Where top_category implies the category to start building the Category Tree.
+Where top category implies the category to start building the Category Tree.

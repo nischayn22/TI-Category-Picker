@@ -34,7 +34,8 @@ var ticp = {
 					if ( select.find( 'option' ).length > 1 ) {
 						$( $.find( '.ticp' ) ).append( select );
 					} else {
-						alert( 'no more categories' );
+						$(".ticp-warning").show("slow");
+						$(".ticp-warning").delay( 2000 ).hide("slow");
 					}
 				} else if ( data && data.error ) {
 					// Will this ever happen??
@@ -135,7 +136,8 @@ var ticp = {
 				if ( select.find( 'option' ).length > 1 ) {
 					$( $.find( '.ticp' ) ).append( select );
 				} else {
-					alert( 'no more categories' );
+					$(".ticp-warning").show("slow");
+					$(".ticp-warning").delay( 2000 ).hide("slow");
 				}
 			} else if ( dropdownId == 3 ) {
 				var options = [];
@@ -149,7 +151,8 @@ var ticp = {
 				if ( select.find( 'option' ).length > 1 ) {
 					$( $.find( '.ticp' ) ).append( select );
 				} else {
-					alert( 'no more categories' );
+					$(".ticp-warning").show("slow");
+					$(".ticp-warning").delay( 2000 ).hide("slow");
 				}
 			}
 			ticp.setFormInputValue( selectedText );
