@@ -15,4 +15,5 @@ $messages = array();
 /** English
  */
 $messages['en'] = array(
+	'ticp-desc' => 'An extension to MediaWiki that lets users select a Category as a form input by drilling in the Category tree using dropdowns'
 );

@@ -43,18 +43,18 @@ $wgExtensionCredits['ticp'][] = array(
 	'version' => 'beta',
 	'author' => array(
 		'[http://www.mediawiki.org/wiki/User:Nischayn22 Nischay Nahata]',
-		'[http://www.wikiworks.com for wikiworks]',
-		'[http://www.texasinstruments.com for TI]'
+		'for [http://www.wikiworks.com wikiworks]',
+		'for [http://www.texasinstruments.com TI]'
 	),
 	'url' => 'https://www.mediawiki.org/wiki/Extension:TI_Category_Picker',
-	'descriptionmsg' => 'TI-Category-Picker-desc'
+	'descriptionmsg' => 'ticp-desc'
 );
 
 $ticpDir 		= __DIR__ . '/';
 
-$wgExtensionMessagesFiles['TI Category Picker'] = $ticpDir . 'TI Category Picker.i18n.php';
+$wgExtensionMessagesFiles['TI Category Picker'] = $ticpDir . 'TICategoryPicker.i18n.php';
 
-$egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TI Category Picker' : $wgExtensionAssetsPath . '/TI Category Picker';
+$egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TICategoryPicker' : $wgExtensionAssetsPath . '/TICategoryPicker';
 
 $moduleTemplate = array(
 	'localBasePath' => dirname( __FILE__ ),
@@ -69,7 +69,7 @@ $wgResourceModules['ext.ticp'] = $moduleTemplate + array(
 
 $wgExtensionFunctions[] = function () {
 	global $sfgFormPrinter;
-	$sfgFormPrinter->setInputTypeHook( 'TI_Category_Picker', 'ticp', array()  );
+	$sfgFormPrinter->setInputTypeHook( 'TI Category Picker', 'ticp', array()  );
 };
 
 /**
@@ -121,7 +121,13 @@ function traverseUp( $startCategory, $topCategory, &$categoryList ) {
 
 	$api->execute();
 	$data = $api->getResultData();
-	$presentCategory = array_shift( $data['query']['pages'] )['categories'][0]['title'];
+	$pageData = array_shift( $data['query']['pages'] );
+
+	if( !array_key_exists( 'categories', $pageData ) ) {
+		return;
+	}
+
+	$presentCategory = $pageData['categories'][0]['title'];
 	$presentCategory = str_replace( 'Category:', '', $presentCategory );
 	if( $presentCategory !== $topCategory ) {
 		$categoryList[] = str_replace( ' ', '_',$presentCategory );
