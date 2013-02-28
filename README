@@ -1,0 +1,29 @@
+These is the readme file for the TI Category Picker extension.
+
+== Download ==
+
+Get the latest copy at https://github.com/nischayn22/TI-Category-Picker/archive/master.zip
+
+== About ==
+
+TI Category Picker is an extension to MediaWiki that lets users select a Category as a form input by drilling in the Category tree using dropdowns.
+
+== Installation ==
+
+To install you must have the following lines in your LocalSettings.php in the same order.
+
+require_once( "$IP/extensions/DataValues/DataValues.php" );
+require_once( "$IP/extensions/Validator/Validator.php" );
+include_once("$IP/extensions/SemanticMediaWiki/SemanticMediaWiki.php");
+enableSemantics('mysite');
+require_once( "$IP/extensions/SemanticForms/SemanticForms.php" );
+
+require_once("$IP/extensions/TICategoryPicker/TICategoryPicker.php");
+
+== Usage ==
+
+To use this extension you can use the form input name 'TI Category Input' like this
+
+{{{field|category|top category=Products|input type=TI Category Picker}}}
+
+Where top_category implies the category to start building the Category Tree.

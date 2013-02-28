@@ -87,7 +87,7 @@ function ticp( $cur_value, $input_name, $is_mandatory, $is_disabled, array $fiel
 
 	$wgOut->addModules( 'ext.ticp' );
 
-	$topCategory = $field_args['top_category'];
+	$topCategory = $field_args['top category'];
 	$categoryList = array();
 	if( $cur_value !== '' ) {
 		traverseUp( $cur_value, $topCategory, $categoryList );
