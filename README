@@ -12,12 +12,7 @@ TI Category Picker is an extension to MediaWiki that lets users select a Categor
 
 To install you must have the following lines in your LocalSettings.php in the same order.
 
-require_once( "$IP/extensions/DataValues/DataValues.php" );
-require_once( "$IP/extensions/Validator/Validator.php" );
-include_once("$IP/extensions/SemanticMediaWiki/SemanticMediaWiki.php");
-enableSemantics('mysite');
 require_once( "$IP/extensions/SemanticForms/SemanticForms.php" );
-
 require_once("$IP/extensions/TICategoryPicker/TICategoryPicker.php");
 
 == Usage ==

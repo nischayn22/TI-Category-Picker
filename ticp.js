@@ -35,7 +35,6 @@ var ticp = {
 						$( $.find( '.ticp' ) ).append( select );
 					} else {
 						$(".ticp-warning").show("slow");
-						$(".ticp-warning").delay( 2000 ).hide("slow");
 					}
 				} else if ( data && data.error ) {
 					// Will this ever happen??
@@ -117,6 +116,7 @@ var ticp = {
 	},
 
 	loadnext: function( e, callback ) {
+		$(".ticp-warning").hide("slow");
 		_this = $( this );
 		selectedText = _this.find( ":selected" ).val();
 		dropdownId = parseInt( _this.attr( 'dropdownId' ) );
@@ -137,7 +137,6 @@ var ticp = {
 					$( $.find( '.ticp' ) ).append( select );
 				} else {
 					$(".ticp-warning").show("slow");
-					$(".ticp-warning").delay( 2000 ).hide("slow");
 				}
 			} else if ( dropdownId == 3 ) {
 				var options = [];
@@ -152,7 +151,6 @@ var ticp = {
 					$( $.find( '.ticp' ) ).append( select );
 				} else {
 					$(".ticp-warning").show("slow");
-					$(".ticp-warning").delay( 2000 ).hide("slow");
 				}
 			}
 			ticp.setFormInputValue( selectedText );
