@@ -15,22 +15,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	die( 'Not an entry point.' );
 }
 
-if ( version_compare( $wgVersion, '1.18c', '<' ) ) {
-	die( '<b>Error:</b> This version of TI Category Picker requires MediaWiki 1.18 or above; use TI Category Picker 1.0.x for MediaWiki 1.17 and TI Category Picker 0.7.x for older versions.' );
-}
-
-// Show a warning if Semantic MediaWiki is not loaded.
-if ( ! defined( 'SMW_VERSION' ) ) {
-	die( '<b>Error:</b> You need to have <a href="https://semantic-mediawiki.org/wiki/Semantic_MediaWiki">Semantic MediaWiki</a> installed in order to use <a href="http://www.mediawiki.org/wiki/Extension:TI Category Picker">TI Category Picker</a>.<br />' );
-}
-
-// Version check for SMW, which needs to be at 1.8 or greater.
-if ( version_compare( SMW_VERSION, '1.8c', '<' ) ) {
-	die(
-		'<b>Error:</b> This version of TI Category Picker needs <a href="https://semantic-mediawiki.org/wiki/Semantic_MediaWiki">Semantic MediaWiki</a> 1.8 or later.
-		You are currently using version ' . SMW_VERSION . '.
-	 	If for any reason you are stuck at SMW 1.7.x or 1.6.x, you can use TI Category Picker 1.0.x instead.<br />'
-	);
+if ( version_compare( $wgVersion, '1.16c', '<' ) ) {
+	die( '<b>Error:</b> This version of TI Category Picker requires MediaWiki 1.16 or above.' );
 }
 
 if ( !defined( 'SF_VERSION' ) ) {
@@ -67,7 +53,9 @@ $wgResourceModules['ext.ticp'] = $moduleTemplate + array(
 	)
 );
 
-$wgExtensionFunctions[] = function () {
+$wgExtensionFunctions[] = "addSFHook";
+
+function addSFHook() {
 	global $sfgFormPrinter;
 	$sfgFormPrinter->setInputTypeHook( 'TI Category Picker', 'ticp', array()  );
 };
