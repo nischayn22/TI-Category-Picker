@@ -76,7 +76,7 @@ var ticp = {
 						if( offset == -1 ) {
 							offset = '';
 						} else {
-							offset = offset  + '&nbsp;&nbsp;';
+							offset = offset  + '&nbsp;';
 						}
 						ticp.addCategoryTree( subCategoryName, options, offset );
 					});
@@ -85,7 +85,7 @@ var ticp = {
 		});
 	},
 
-	addDescendantsAndDirectChildren: function( categoryName, options, addDirectChild, wasDirectChild ) {
+	addDescendantsAndDirectChildren: function( categoryName, options, firstcall ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
 			async: false,
@@ -101,20 +101,16 @@ var ticp = {
 			type: 'GET',
 			success: function( data ) {
 				if ( data && data.query && data.query.categorymembers ) {
-					if (data.query.categorymembers.length == 0 && !wasDirectChild ) {
+					if (data.query.categorymembers.length == 0 ) {
 						options.push( $('<option></option>').val( categoryName ).html( categoryName ) );
 						return;
 					}
-
-					$.each( data.query.categorymembers, function( i, member ) {
-						subCategoryName = member.title.replace( 'Category:', '' );
-						if ( addDirectChild ) {
-							options.push( $('<option></option>').val( subCategoryName ).html( subCategoryName ) );
-							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false, true );
-						} else {
-							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false, false );
-						}
-					});
+					if ( firstcall ) {
+						$.each( data.query.categorymembers, function( i, member ) {
+							subCategoryName = member.title.replace( 'Category:', '' );
+							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false );
+						});
+					}
 				}
 			}
 		});
@@ -145,7 +141,7 @@ var ticp = {
 				}
 			} else if ( dropdownId == 3 ) {
 				var options = [];
-				ticp.addDescendantsAndDirectChildren( selectedText, options, true, false );
+				ticp.addDescendantsAndDirectChildren( selectedText, options, true );
 				var select = $( '<select id="ticp" dropdownId="4"></select>' );
 				select.append( $('<option></option>').html( '' ) );
 				$.each( options, function( index, element ) {

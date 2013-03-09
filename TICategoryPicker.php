@@ -36,7 +36,7 @@ $wgExtensionCredits['ticp'][] = array(
 	'descriptionmsg' => 'ticp-desc'
 );
 
-$ticpDir 		= __DIR__ . '/';
+$ticpDir 		= dirname( __FILE__ ) . '/';
 
 $wgExtensionMessagesFiles['TI Category Picker'] = $ticpDir . 'TICategoryPicker.i18n.php';
 
