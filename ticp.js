@@ -8,7 +8,7 @@ var ticp = {
 
 	addNewDropDown: function( categoryName, position ) {
 		$.ajax({
-			url: mw.util.wikiScript( 'api' ),
+			url: wgScriptPath + "/api.php",
 			async: false,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
@@ -51,7 +51,7 @@ var ticp = {
 
 	addCategoryTree: function( categoryName, options, offset ) {
 		$.ajax({
-			url: mw.util.wikiScript( 'api' ),
+			url: wgScriptPath + "/api.php",
 			async: false,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
@@ -85,9 +85,9 @@ var ticp = {
 		});
 	},
 
-	addDescendants: function( categoryName, options ) {
+	addDescendantsAndDirectChildren: function( categoryName, options, addDirectChild, wasDirectChild ) {
 		$.ajax({
-			url: mw.util.wikiScript( 'api' ),
+			url: wgScriptPath + "/api.php",
 			async: false,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
@@ -101,14 +101,19 @@ var ticp = {
 			type: 'GET',
 			success: function( data ) {
 				if ( data && data.query && data.query.categorymembers ) {
-					if (data.query.categorymembers.length == 0 ) {
+					if (data.query.categorymembers.length == 0 && !wasDirectChild ) {
 						options.push( $('<option></option>').val( categoryName ).html( categoryName ) );
 						return;
 					}
 
 					$.each( data.query.categorymembers, function( i, member ) {
 						subCategoryName = member.title.replace( 'Category:', '' );
-						ticp.addDescendants( subCategoryName, options );
+						if ( addDirectChild ) {
+							options.push( $('<option></option>').val( subCategoryName ).html( subCategoryName ) );
+							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false, true );
+						} else {
+							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false, false );
+						}
 					});
 				}
 			}
@@ -140,7 +145,7 @@ var ticp = {
 				}
 			} else if ( dropdownId == 3 ) {
 				var options = [];
-				ticp.addDescendants( selectedText, options );
+				ticp.addDescendantsAndDirectChildren( selectedText, options, true, false );
 				var select = $( '<select id="ticp" dropdownId="4"></select>' );
 				select.append( $('<option></option>').html( '' ) );
 				$.each( options, function( index, element ) {

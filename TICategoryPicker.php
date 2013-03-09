@@ -73,7 +73,11 @@ function addSFHook() {
 function ticp( $cur_value, $input_name, $is_mandatory, $is_disabled, array $field_args ) {
 	global $wgOut;
 
-	$wgOut->addModules( 'ext.ticp' );
+	if ( class_exists( 'ResourceLoader' ) ) {
+		$wgOut->addModules( 'ext.ticp' );
+	} else {
+		$wgOut->addScriptFile( "$egTICPScriptPath/ticp.js" );
+	}
 
 	$topCategory = $field_args['top category'];
 	$categoryList = array();
