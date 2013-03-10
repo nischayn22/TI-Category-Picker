@@ -2,11 +2,11 @@
 
 var ticp = {
 
-	init: function() {
-		ticp.addNewDropDown( $( $.find( '.ticp' ) ).attr( 'top_cat' ), 1 );
+	init: function( element ) {
+		ticp.addNewDropDown( element, element.attr( 'top_cat' ), 1 );
 	},
 
-	addNewDropDown: function( categoryName, position ) {
+	addNewDropDown: function( element, categoryName, position ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
 			async: false,
@@ -32,9 +32,9 @@ var ticp = {
 					});
 					select.bind('change', ticp.loadnext );
 					if ( select.find( 'option' ).length > 1 ) {
-						$( $.find( '.ticp' ) ).append( select );
+						element.append( select );
 					} else {
-						$(".ticp-warning").show("slow");
+						element.find( ".ticp-warning" ).show("slow");
 					}
 				} else if ( data && data.error ) {
 					// Will this ever happen??
@@ -117,14 +117,15 @@ var ticp = {
 	},
 
 	loadnext: function( e, callback ) {
-		$(".ticp-warning").hide("slow");
+		element = $( this ).parent();
+		element.parent().find(".ticp-warning").hide("slow");
 		_this = $( this );
 		selectedText = _this.find( ":selected" ).val();
 		dropdownId = parseInt( _this.attr( 'dropdownId' ) );
-		ticp.removeInvalidDropDowns( dropdownId + 1 );
+		ticp.removeInvalidDropDowns( element, dropdownId + 1 );
 		if ( selectedText !== '' ) {
 			if( dropdownId < 2 ) {
-				ticp.addNewDropDown( selectedText, dropdownId + 1 );
+				ticp.addNewDropDown( element, selectedText, dropdownId + 1 );
 			} else if ( dropdownId === 2 ) {
 				var options = [], offset = -1;
 				ticp.addCategoryTree( selectedText, options, offset );
@@ -135,9 +136,9 @@ var ticp = {
 				});
 				select.bind('change', ticp.loadnext );
 				if ( select.find( 'option' ).length > 1 ) {
-					$( $.find( '.ticp' ) ).append( select );
+					element.append( select );
 				} else {
-					$(".ticp-warning").show("slow");
+					element.parent().find(".ticp-warning").show("slow");
 				}
 			} else if ( dropdownId == 3 ) {
 				var options = [];
@@ -149,12 +150,12 @@ var ticp = {
 				});
 				select.bind('change', ticp.loadnext );
 				if ( select.find( 'option' ).length > 1 ) {
-					$( $.find( '.ticp' ) ).append( select );
+					element.append( select );
 				} else {
-					$(".ticp-warning").show("slow");
+					element.parent().find(".ticp-warning").show("slow");
 				}
 			}
-			ticp.setFormInputValue( selectedText );
+			ticp.setFormInputValue( element, selectedText );
 
 			if( typeof callback === "function" ) {
 				callback();
@@ -162,8 +163,8 @@ var ticp = {
 		}
 	},
 
-	removeInvalidDropDowns: function( position ) {
-		$( 'select#ticp' ).each( function( i, element ) {
+	removeInvalidDropDowns: function( element, position ) {
+		element.find( 'select' ).each( function( i, element ) {
 			select = $( element );
 			if ( select.attr( 'dropdownId' ) >= position ) {
 				select.remove();
@@ -171,17 +172,17 @@ var ticp = {
 		});
 	},
 
-	setFormInputValue: function( category ) {
-		$( '.ticp-input' ).val( category );
+	setFormInputValue: function( element, category ) {
+		element.find( '.ticp-input' ).val( category );
 	},
 
-	setCurrentValue: function() {
+	setCurrentValue: function( element ) {
 		var j = 0;
-		$tree = JSON.parse( $( '.ticp' ).attr( 'current_category_tree' ) );
+		$tree = JSON.parse( element.attr( 'current_category_tree' ) );
 		$.each( $tree, function ( i, item ) {
 			$tree[i] = item.replace( '_', ' ' );
 		});
-		$( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
+		element.find( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
 
 		if ( $tree.length > 2 ) {
 			$( 'select#ticp[dropdownId="1"]' ).trigger( 'change', function () {
@@ -205,6 +206,18 @@ var ticp = {
 
 };
 
-ticp.init();
-ticp.setCurrentValue();
+// Jquery plugin for this extension
+(function($) {
+
+	$.fn.ticp = function( ) {
+		ticp.init( this );
+		ticp.setCurrentValue( this );
+		return this;
+	}
+})($);
+
+$( '.ticp' ).each( function( i, element ){
+	$( element ).ticp();
+} )
+
 } )( jQuery, mediaWiki );
