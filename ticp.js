@@ -216,8 +216,10 @@ var ticp = {
 	}
 })($);
 
-$( '.ticp' ).each( function( i, element ){
-	$( element ).ticp();
-} )
-
+window.ticp = function(  input_id ) {
+alert(input_id);
+	// $( '.ticp' ).each( function( i, element ){
+		// $( element ).ticp();
+	// } )
+}
 } )( jQuery, mediaWiki );
