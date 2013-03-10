@@ -1,9 +1,10 @@
 <?php
 
 /**
- * The SFIDatePicker class.
+ * The TICategoryPicker class.
  *
  * @ingroup SemanticFormsInputs
+ * @author Nischay Nahata for Wikiworks for TI
  */
 class TICategoryPicker extends SFFormInput {
 
@@ -68,7 +69,7 @@ class TICategoryPicker extends SFFormInput {
 		return $params;
 	}
 
-	public function traverseUp( $startCategory, $topCategory, &$categoryList ) {
+	protected function traverseUp( $startCategory, $topCategory, &$categoryList ) {
 		global $wgRequest;
 		$api = new ApiMain(
 				new DerivativeRequest(
