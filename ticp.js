@@ -16,7 +16,7 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmtype: 'subcat',
+				cmtype: 'subcat'
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -59,7 +59,7 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmtype: 'subcat',
+				cmtype: 'subcat'
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -95,7 +95,7 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmtype: 'subcat',
+				cmtype: 'subcat'
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -185,21 +185,21 @@ var ticp = {
 		element.find( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
 
 		if ( $tree.length > 2 ) {
-			$( 'select#ticp[dropdownId="1"]' ).trigger( 'change', function () {
-				$( 'select#ticp[dropdownId="2"]' ).find( 'option[value="' + $tree[1] + '"]' ).attr( 'selected', 'selected' );
+			element.find( 'select#ticp[dropdownId="1"]' ).trigger( 'change', function () {
+				element.find( 'select#ticp[dropdownId="2"]' ).find( 'option[value="' + $tree[1] + '"]' ).attr( 'selected', 'selected' );
 			});
 		}
 
 		// going from rear as we always ignore the middle categories and don't have dropdowns for them
 		if ( $tree.length > 3 ) {
-			$( 'select#ticp[dropdownId="2"]' ).trigger( 'change', function () {
-				$( 'select#ticp[dropdownId="3"]' ).find( 'option[value="' + $tree[ $tree.length -2 ] + '"]' ).attr( 'selected', 'selected' );
+			element.find( 'select#ticp[dropdownId="2"]' ).trigger( 'change', function () {
+				element.find( 'select#ticp[dropdownId="3"]' ).find( 'option[value="' + $tree[ $tree.length -2 ] + '"]' ).attr( 'selected', 'selected' );
 			});
 		}
 
 		if ( $tree.length > 4 ) {
-			$( 'select#ticp[dropdownId="3"]' ).trigger( 'change', function () {
-				$( 'select#ticp[dropdownId="4"]' ).find( 'option[value="' + $tree[ $tree.length -1 ] + '"]' ).attr( 'selected', 'selected' );
+			element.find( 'select#ticp[dropdownId="3"]' ).trigger( 'change', function () {
+				element.find( 'select#ticp[dropdownId="4"]' ).find( 'option[value="' + $tree[ $tree.length -1 ] + '"]' ).attr( 'selected', 'selected' );
 			});
 		}
 	}

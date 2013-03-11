@@ -97,7 +97,7 @@ class TICategoryPicker extends SFFormInput {
 		$presentCategory = str_replace( 'Category:', '', $presentCategory );
 		if( $presentCategory !== $topCategory ) {
 			$categoryList[] = str_replace( ' ', '_',$presentCategory );
-			traverseUp( $presentCategory,$topCategory, $categoryList );
+			$this->traverseUp( $presentCategory,$topCategory, $categoryList );
 		}
 	}
 
