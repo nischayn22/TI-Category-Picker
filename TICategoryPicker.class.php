@@ -27,6 +27,11 @@ class TICategoryPicker extends SFFormInput {
 
 		parent::__construct( $input_number, $cur_value, $input_name, $disabled, $other_args );
 
+		if ( !defined( 'MW_SUPPORTS_RESOURCE_MODULES' ) ) {
+			global $wgOut, $egTICPScriptPath;
+			$wgOut->addScriptFile( "$egTICPScriptPath/ticp.js" );
+		}
+
 		$this->addJsInitFunctionData( 'TICP', $input_number );
 	}
 
@@ -72,8 +77,8 @@ class TICategoryPicker extends SFFormInput {
 	protected function traverseUp( $startCategory, $topCategory, &$categoryList ) {
 		global $wgRequest;
 		$api = new ApiMain(
-				new DerivativeRequest(
-					$wgRequest,
+				new FauxRequest(
+//					$wgRequest,
 					array(
 						'action' => 'query',
 						'prop' => 'categories',

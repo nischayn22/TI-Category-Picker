@@ -1,4 +1,4 @@
-(function( $, mw ) {
+(function( $ ) {
 
 var ticp = {
 
@@ -16,7 +16,7 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmtype: 'subcat'
+				cmnamespace: 14
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -59,7 +59,7 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmtype: 'subcat'
+				cmnamespace: 14
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -68,16 +68,16 @@ var ticp = {
 					if (data.query.categorymembers.length == 0 ) {
 						return;
 					}
-					if( offset !== -1 )
+					if ( offset !== -1 )
 						options.push( $('<option></option>').val( categoryName ).html( offset + categoryName ) );
 
+					if ( offset == -1 ) {
+						offset = '';
+					} else {
+						offset = offset  + '&nbsp;&nbsp;&nbsp;';
+					}
 					$.each( data.query.categorymembers, function( i, member ) {
 						subCategoryName = member.title.replace( 'Category:', '' );
-						if( offset == -1 ) {
-							offset = '';
-						} else {
-							offset = offset  + '&nbsp;';
-						}
 						ticp.addCategoryTree( subCategoryName, options, offset );
 					});
 				}
@@ -95,7 +95,7 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmtype: 'subcat'
+				cmnamespace: 14
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -219,4 +219,4 @@ var ticp = {
 window.TICP = function( input_id ) {
 	$( '#' + input_id ).parent().ticp();
 }
-} )( jQuery, mediaWiki );
+} )( jQuery );
