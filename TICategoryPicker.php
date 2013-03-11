@@ -43,19 +43,20 @@ $wgAutoloadClasses['TICategoryPicker'] = $ticpDir . 'TICategoryPicker.class.php'
 
 $egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TICategoryPicker' : $wgExtensionAssetsPath . '/TICategoryPicker';
 
-$moduleTemplate = array(
-	'localBasePath' => dirname( __FILE__ ),
-	'remoteBasePath' => $egTICPScriptPath
-);
-
-$wgResourceModules['ext.ticp'] = $moduleTemplate + array(
-	'scripts' => array(
-		'ticp.js'
-	),
-	'dependencies' => array(
-			'ext.semanticforms.main'
-	),
-);
+if ( defined( 'MW_SUPPORTS_RESOURCE_MODULES' ) ) {
+	$moduleTemplate = array(
+		'localBasePath' => dirname( __FILE__ ),
+		'remoteBasePath' => $egTICPScriptPath
+	);
+	$wgResourceModules['ext.ticp'] = $moduleTemplate + array(
+		'scripts' => array(
+			'ticp.js'
+		),
+		'dependencies' => array(
+				'ext.semanticforms.main'
+		),
+	);
+}
 
 $wgExtensionFunctions[] = "addSFHook";
 

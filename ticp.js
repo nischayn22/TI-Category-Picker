@@ -3,10 +3,10 @@
 var ticp = {
 
 	init: function( element ) {
-		ticp.addNewDropDown( element, element.attr( 'top_cat' ), 1 );
+		ticp.addNewDropDown( element, element.attr( 'top_cat' ), 1, 'type' );
 	},
 
-	addNewDropDown: function( element, categoryName, position ) {
+	addNewDropDown: function( element, categoryName, position, tdID ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
 			async: false,
@@ -32,7 +32,8 @@ var ticp = {
 					});
 					select.bind('change', ticp.loadnext );
 					if ( select.find( 'option' ).length > 1 ) {
-						element.append( select );
+						element.find( 'tr.headers' ).find( '#'+tdID ).show();
+						element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 					} else {
 						element.find( ".ticp-warning" ).show("slow");
 					}
@@ -117,7 +118,7 @@ var ticp = {
 	},
 
 	loadnext: function( e, callback ) {
-		element = $( this ).parent();
+		element = $( this ).closest( '.ticp' );
 		element.parent().find(".ticp-warning").hide("slow");
 		_this = $( this );
 		selectedText = _this.find( ":selected" ).val();
@@ -125,7 +126,7 @@ var ticp = {
 		ticp.removeInvalidDropDowns( element, dropdownId + 1 );
 		if ( selectedText !== '' ) {
 			if( dropdownId < 2 ) {
-				ticp.addNewDropDown( element, selectedText, dropdownId + 1 );
+				ticp.addNewDropDown( element, selectedText, dropdownId + 1, 'family' );
 			} else if ( dropdownId === 2 ) {
 				var options = [], offset = -1;
 				ticp.addCategoryTree( selectedText, options, offset );
@@ -136,7 +137,8 @@ var ticp = {
 				});
 				select.bind('change', ticp.loadnext );
 				if ( select.find( 'option' ).length > 1 ) {
-					element.append( select );
+					element.find( 'tr.headers' ).find( '#category' ).show();
+					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 				} else {
 					element.parent().find(".ticp-warning").show("slow");
 				}
@@ -150,7 +152,8 @@ var ticp = {
 				});
 				select.bind('change', ticp.loadnext );
 				if ( select.find( 'option' ).length > 1 ) {
-					element.append( select );
+					element.find( 'tr.headers' ).find( '#productid' ).show();
+					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 				} else {
 					element.parent().find(".ticp-warning").show("slow");
 				}
@@ -164,10 +167,11 @@ var ticp = {
 	},
 
 	removeInvalidDropDowns: function( element, position ) {
-		element.find( 'select' ).each( function( i, element ) {
-			select = $( element );
+		element.find( 'select' ).each( function( i, el ) {
+			select = $( el );
 			if ( select.attr( 'dropdownId' ) >= position ) {
-				select.remove();
+				select.parent().remove();
+				element.find( 'tr.headers' ).find( 'th.'+ select.attr( 'dropdownId' ) ).hide();
 			}
 		});
 	},
