@@ -125,10 +125,10 @@ class TICategoryPicker extends SFFormInput {
 		}
 
 		$html = '
-			<div class="ticp" top_cat="'. $topCategory .'" current_category_tree=' . FormatJson::encode( $categoryList ) . '>
+			<div class="ticp" style="float:left;" top_cat="'. $topCategory .'" current_category_tree=' . FormatJson::encode( $categoryList ) . '>
 				<input class="ticp-input" id="input_' . $this->mInputNumber . '" value="' . $this->mCurrentValue . '" name="' . htmlspecialchars( $this->mInputName ) . '" cols="4" rows="2" style= "display:none;"></input>
 				<table>
-					<tbody>
+					<tbody style="float:left;">
 					 <tr class="headers">
 						<th id="type" class="1" style="display:none;">Type</th>
 						<th id="family" class="2" style="display:none;">Family</th>
