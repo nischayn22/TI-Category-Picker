@@ -41,7 +41,7 @@ $ticpDir 		= dirname( __FILE__ ) . '/';
 $wgExtensionMessagesFiles['TI Category Picker'] = $ticpDir . 'TICategoryPicker.i18n.php';
 $wgAutoloadClasses['TICategoryPicker'] = $ticpDir . 'TICategoryPicker.class.php';
 
-$egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TICategoryPicker' : $wgExtensionAssetsPath . '/TICategoryPicker';
+$egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TI-Category-Picker' : $wgExtensionAssetsPath . '/TI-Category-Picker';
 
 if ( defined( 'MW_SUPPORTS_RESOURCE_MODULES' ) ) {
 	$moduleTemplate = array(

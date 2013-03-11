@@ -44,7 +44,7 @@ class TICategoryPicker extends SFFormInput {
 	 * @return String The name of the input type this class handles.
 	 */
 	public static function getName() {
-		return 'TI Category Picker';
+		return 'TI category picker';
 	}
 
 	/**
