@@ -27,7 +27,7 @@ class TICategoryPicker extends SFFormInput {
 
 		parent::__construct( $input_number, $cur_value, $input_name, $disabled, $other_args );
 
-		$this->addJsInitFunctionData( 'ticp', $input_number );
+		$this->addJsInitFunctionData( 'TICP', $input_number );
 	}
 
 	/**
@@ -118,10 +118,10 @@ class TICategoryPicker extends SFFormInput {
 			$categoryList = array_reverse( $categoryList );
 			$categoryList[] = str_replace( ' ','_' ,$this->mCurrentValue );
 		}
-		
+
 		$html = '
 			<div class="ticp" top_cat="'. $topCategory .'" current_category_tree=' . FormatJson::encode( $categoryList ) . '>
-				<input class="ticp-input" value="' . $this->mCurrentValue . '" name="' . htmlspecialchars( $this->mInputName ) . '" cols="4" rows="2" style= "display:none;"></input>
+				<input class="ticp-input" id="input_' . $this->mInputNumber . '" value="' . $this->mCurrentValue . '" name="' . htmlspecialchars( $this->mInputName ) . '" cols="4" rows="2" style= "display:none;"></input>
 			</div> <div class="ticp-warning"  style="display:none;" ><b style="color:grey; display:block; padding:3px;" > No more categories </b></div>';
 
 		return $html;

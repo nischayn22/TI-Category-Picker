@@ -51,7 +51,10 @@ $moduleTemplate = array(
 $wgResourceModules['ext.ticp'] = $moduleTemplate + array(
 	'scripts' => array(
 		'ticp.js'
-	)
+	),
+	'dependencies' => array(
+			'ext.semanticforms.main'
+	),
 );
 
 $wgExtensionFunctions[] = "addSFHook";
