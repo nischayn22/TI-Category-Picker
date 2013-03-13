@@ -49,10 +49,10 @@ class TICategoryPicker extends SFFormInput {
 
 	/**
 	 * Returns the names of the resource modules this input type uses.
-	 * 
-	 * Returns the names of the modules as an array or - if there is only one 
+	 *
+	 * Returns the names of the modules as an array or - if there is only one
 	 * module - as a string.
-	 * 
+	 *
 	 * @return null|string|array
 	 */
 	public function getResourceModuleNames() {
@@ -61,7 +61,7 @@ class TICategoryPicker extends SFFormInput {
 
 	/**
 	 * Returns the set of parameters for this form input.
-	 * 
+	 *
 	 */
 	public static function getParameters() {
 
@@ -77,18 +77,18 @@ class TICategoryPicker extends SFFormInput {
 	protected function traverseUp( $startCategory, $topCategory, &$categoryList ) {
 		global $wgRequest;
 		$api = new ApiMain(
-				new FauxRequest(
+			new FauxRequest(
 //					$wgRequest,
-					array(
-						'action' => 'query',
-						'prop' => 'categories',
-						'titles' => 'Category:' . $startCategory,
-						'limit' => 1
-					),
-					false // was posted?
+				array(
+					'action' => 'query',
+					'prop' => 'categories',
+					'titles' => 'Category:' . $startCategory,
+					'limit' => 1
 				),
-				false // enable write?
-			);
+				false // was posted?
+			),
+			false // enable write?
+		);
 
 		$api->execute();
 		$data = $api->getResultData();
@@ -122,6 +122,29 @@ class TICategoryPicker extends SFFormInput {
 			$this->traverseUp( $this->mCurrentValue, $topCategory, $categoryList );
 			$categoryList = array_reverse( $categoryList );
 			$categoryList[] = str_replace( ' ','_' ,$this->mCurrentValue );
+		}
+
+		if( count( $categoryList ) > 3 ) {
+			global $wgRequest;
+			$api = new ApiMain(
+				new FauxRequest(
+//					$wgRequest,
+					array(
+						'action' => 'query',
+						'list' => 'categorymembers',
+						'cmtitle' => 'Category:' . $this->mCurrentValue,
+						'cmnamespace' => 14
+					),
+					false // was posted?
+				),
+				false // enable write?
+			);
+
+			$api->execute();
+			$data = $api->getResultData();
+			if( count( $data['query']['categorymembers'] ) !== 0 ){
+				$categoryList[] = '';
+			}
 		}
 
 		$html = '

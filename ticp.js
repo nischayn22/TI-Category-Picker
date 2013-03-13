@@ -186,8 +186,6 @@ var ticp = {
 		$.each( $tree, function ( i, item ) {
 			$tree[i] = item.replace( /_/g, ' ' );
 		});
-		// set value of input box
-		ticp.setFormInputValue( element, $tree[$tree.length-1] );
 
 		// set dropdowns values
 		element.find( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
