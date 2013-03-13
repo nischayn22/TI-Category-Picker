@@ -184,27 +184,29 @@ var ticp = {
 		var j = 0;
 		$tree = JSON.parse( element.attr( 'current_category_tree' ) );
 		$.each( $tree, function ( i, item ) {
-			$tree[i] = item.replace( '_', ' ' );
+			$tree[i] = item.replace( /_/g, ' ' );
 		});
-		element.find( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
+		// set value of input box
+		ticp.setFormInputValue( element, $tree[$tree.length-1] );
 
-		if ( $tree.length > 2 ) {
-			element.find( 'select#ticp[dropdownId="1"]' ).trigger( 'change', function () {
-				element.find( 'select#ticp[dropdownId="2"]' ).find( 'option[value="' + $tree[1] + '"]' ).attr( 'selected', 'selected' );
-			});
+		// set dropdowns values
+		element.find( 'select#ticp[dropdownId="1"]' ).find( 'option[value="' + $tree[0] + '"]' ).attr( 'selected', 'selected' );
+		element.find( 'select#ticp[dropdownId="1"]' ).trigger( 'change');
+
+		if ( $tree.length >= 2 ) {
+			element.find( 'select#ticp[dropdownId="2"]' ).find( 'option[value="' + $tree[1] + '"]' ).attr( 'selected', 'selected' );
+			element.find( 'select#ticp[dropdownId="2"]' ).trigger( 'change' );
 		}
 
 		// going from rear as we always ignore the middle categories and don't have dropdowns for them
-		if ( $tree.length > 3 ) {
-			element.find( 'select#ticp[dropdownId="2"]' ).trigger( 'change', function () {
-				element.find( 'select#ticp[dropdownId="3"]' ).find( 'option[value="' + $tree[ $tree.length -2 ] + '"]' ).attr( 'selected', 'selected' );
-			});
+		if ( $tree.length >= 3 ) {
+			element.find( 'select#ticp[dropdownId="3"]' ).find( 'option[value="' + $tree[2] + '"]' ).attr( 'selected', 'selected' );
+			element.find( 'select#ticp[dropdownId="3"]' ).trigger( 'change' );
 		}
 
-		if ( $tree.length > 4 ) {
-			element.find( 'select#ticp[dropdownId="3"]' ).trigger( 'change', function () {
-				element.find( 'select#ticp[dropdownId="4"]' ).find( 'option[value="' + $tree[ $tree.length -1 ] + '"]' ).attr( 'selected', 'selected' );
-			});
+		if ( $tree.length >= 4 ) {
+			element.find( 'select#ticp[dropdownId="4"]' ).find( 'option[value="' + $tree[3] + '"]' ).attr( 'selected', 'selected' );
+			element.find( 'select#ticp[dropdownId="4"]' ).trigger( 'change' );
 		}
 	}
 

@@ -139,7 +139,9 @@ class TICategoryPicker extends SFFormInput {
 					  </tr>
 					</tbody>
 				</table>
-			</div> <div class="ticp-warning"  style="display:none;" ><b style="color:grey; display:block; padding:3px;" > No more categories </b></div>';
+			</div>
+			<br />
+			<div class="ticp-warning"  style="clear:both;display:none;" ><b style="color:grey; display:block; padding:3px;" > No more categories </b></div>';
 
 		return $html;
 	}
