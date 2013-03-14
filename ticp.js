@@ -153,6 +153,9 @@ var ticp = {
 				select.bind('change', ticp.loadnext );
 				if ( select.find( 'option' ).length > 1 ) {
 					element.find( 'tr.headers' ).find( '#productid' ).show();
+					if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
+						select.attr( 'disabled', 'disabled' );
+					}
 					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 				} else {
 					element.parent().find(".ticp-warning").show("slow");

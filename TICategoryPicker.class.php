@@ -115,6 +115,12 @@ class TICategoryPicker extends SFFormInput {
 	 *
 	 */
 	public function getHtmlText() {
+		global $wgTitle;
+
+		$fourthDropdownDisabled = 1;
+		if ( $wgTitle->userCan( 'delete' ) ) {
+			$fourthDropdownDisabled = 0;
+		}
 
 		$topCategory = $this->mOtherArgs['top category'];
 		$categoryList = array();
@@ -155,10 +161,10 @@ class TICategoryPicker extends SFFormInput {
 					 <tr class="headers">
 						<th id="type" class="1" style="display:none;">Type</th>
 						<th id="family" class="2" style="display:none;">Family</th>
-						<th id="category" class="3" style="display:none;">Category</th>
-						<th id="productid" class="4" style="display:none;">Product ID</th>
+						<th id="category" class="3" style="display:none;">Sub-family</th>
+						<th id="productid" class="4" style="display:none;">Part number</th>
 					 </tr>
-					  <tr class="dropdowns">
+					  <tr class="dropdowns" disable_fourth_dropdown="' . $fourthDropdownDisabled . '">
 					  </tr>
 					</tbody>
 				</table>
