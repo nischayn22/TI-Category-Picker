@@ -16,7 +16,8 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmnamespace: 14
+				cmnamespace: 14,
+				cmlimit: 100000
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -60,7 +61,8 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmnamespace: 14
+				cmnamespace: 14,
+				cmlimit: 100000
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -96,7 +98,8 @@ var ticp = {
 				action: 'query',
 				list: 'categorymembers',
 				cmtitle: 'Category:' + categoryName,
-				cmnamespace: 14
+				cmnamespace: 14,
+				cmlimit: 100000
 			},
 			dataType: 'json',
 			type: 'GET',
@@ -127,6 +130,23 @@ var ticp = {
 		if ( selectedText !== '' ) {
 			if( dropdownId < 2 ) {
 				ticp.addNewDropDown( element, selectedText, dropdownId + 1, 'family' );
+
+				// code to show last dropdown
+				var options = [];
+				ticp.addDescendantsAndDirectChildren( selectedText, options, true );
+				var select = $( '<select id="ticp" dropdownId="4"></select>' );
+				select.append( $('<option></option>').html( '' ) );
+				$.each( options, function( index, element ) {
+					select.append(element);
+				});
+				select.bind('change', ticp.loadnext );
+				if ( select.find( 'option' ).length > 1 ) {
+					element.find( 'tr.headers' ).find( '#productid' ).show();
+					if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
+						select.attr( 'disabled', 'disabled' );
+					}
+					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
+				}
 			} else if ( dropdownId === 2 ) {
 				var options = [], offset = -1;
 				ticp.addCategoryTree( selectedText, options, offset );
@@ -141,6 +161,24 @@ var ticp = {
 					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 				} else {
 					element.parent().find(".ticp-warning").show("slow");
+				}
+
+
+				// code to show last dropdown
+				var options = [];
+				ticp.addDescendantsAndDirectChildren( selectedText, options, true );
+				var select = $( '<select id="ticp" dropdownId="4"></select>' );
+				select.append( $('<option></option>').html( '' ) );
+				$.each( options, function( index, element ) {
+					select.append(element);
+				});
+				select.bind('change', ticp.loadnext );
+				if ( select.find( 'option' ).length > 1 ) {
+					element.find( 'tr.headers' ).find( '#productid' ).show();
+					if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
+						select.attr( 'disabled', 'disabled' );
+					}
+					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 				}
 			} else if ( dropdownId == 3 ) {
 				var options = [];
