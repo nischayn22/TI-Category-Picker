@@ -1,5 +1,6 @@
 (function( $ ) {
 
+var counter = 1, counterA = 1;
 var ticp = {
 
 	init: function( element ) {
@@ -9,7 +10,7 @@ var ticp = {
 	addNewDropDown: function( element, categoryName, position, tdID ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
-			async: false,
+			async: true,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
 				format: 'json',
@@ -51,10 +52,10 @@ var ticp = {
 		});
 	},
 
-	addCategoryTree: function( categoryName, options, offset ) {
+	addCategoryTree: function( categoryName, options, offset, callback ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
-			async: false,
+			async: true,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
 				format: 'json',
@@ -68,7 +69,13 @@ var ticp = {
 			type: 'GET',
 			success: function( data ) {
 				if ( data && data.query && data.query.categorymembers ) {
+				console.log(counterA);
 					if (data.query.categorymembers.length == 0 ) {
+						counterA--;
+						if ( counterA == 0 ) {
+							callback();
+							counterA = 1;
+						}
 						return;
 					}
 					if ( offset !== -1 )
@@ -81,17 +88,23 @@ var ticp = {
 					}
 					$.each( data.query.categorymembers, function( i, member ) {
 						subCategoryName = member.title.replace( 'Category:', '' );
-						ticp.addCategoryTree( subCategoryName, options, offset );
+						counterA++;
+						ticp.addCategoryTree( subCategoryName, options, offset, callback );
 					});
+					counterA--;
+					if ( counterA == 0 ) {
+						callback();
+						counterA = 1;
+					}
 				}
 			}
 		});
 	},
 
-	addDescendantsAndDirectChildren: function( categoryName, options, firstcall ) {
+	addDescendantsAndDirectChildren: function( categoryName, options, firstcall, callback ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
-			async: false,
+			async: true,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
 				format: 'json',
@@ -105,15 +118,20 @@ var ticp = {
 			type: 'GET',
 			success: function( data ) {
 				if ( data && data.query && data.query.categorymembers ) {
-					if (data.query.categorymembers.length == 0 ) {
-						options.push( $('<option></option>').val( categoryName ).html( categoryName ) );
-						return;
-					}
 					if ( firstcall ) {
 						$.each( data.query.categorymembers, function( i, member ) {
 							subCategoryName = member.title.replace( 'Category:', '' );
-							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false );
+							counter++;
+							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false, callback );
 						});
+					}
+					counter--;
+					if (data.query.categorymembers.length == 0 && !firstcall) {
+						options.push( $('<option></option>').val( categoryName ).html( categoryName ) );
+					}
+					if ( counter == 0 ) {
+						callback();
+						counter = 1;
 					}
 				}
 			}
@@ -132,72 +150,80 @@ var ticp = {
 				ticp.addNewDropDown( element, selectedText, dropdownId + 1, 'family' );
 
 				// code to show last dropdown
-				var options = [];
-				ticp.addDescendantsAndDirectChildren( selectedText, options, true );
-				var select = $( '<select id="ticp" dropdownId="4"></select>' );
-				select.append( $('<option></option>').html( '' ) );
-				$.each( options, function( index, element ) {
-					select.append(element);
-				});
-				select.bind('change', ticp.loadnext );
-				if ( select.find( 'option' ).length > 1 ) {
-					element.find( 'tr.headers' ).find( '#productid' ).show();
-					if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
-						select.attr( 'disabled', 'disabled' );
+				var options = [],
+				callback = function () {
+					var select = $( '<select id="ticp" dropdownId="4"></select>' );
+					select.append( $('<option></option>').html( '' ) );
+					$.each( options, function( index, element ) {
+						select.append(element);
+					});
+					console.log( select );
+					select.bind('change', ticp.loadnext );
+					if ( select.find( 'option' ).length > 1 ) {
+						element.find( 'tr.headers' ).find( '#productid' ).show();
+						if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
+							select.attr( 'disabled', 'disabled' );
+						}
+						element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 					}
-					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
-				}
+				};
+				ticp.addDescendantsAndDirectChildren( selectedText, options, true, callback );
 			} else if ( dropdownId === 2 ) {
-				var options = [], offset = -1;
-				ticp.addCategoryTree( selectedText, options, offset );
-				var select = $( '<select id="ticp" dropdownId="3"></select>' );
-				select.append( $('<option></option>').html( '' ) );
-				$.each( options, function( index, element ) {
-					select.append(element);
-				});
-				select.bind('change', ticp.loadnext );
-				if ( select.find( 'option' ).length > 1 ) {
-					element.find( 'tr.headers' ).find( '#category' ).show();
-					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
-				} else {
-					element.parent().find(".ticp-warning").show("slow");
-				}
-
-
-				// code to show last dropdown
-				var options = [];
-				ticp.addDescendantsAndDirectChildren( selectedText, options, true );
-				var select = $( '<select id="ticp" dropdownId="4"></select>' );
-				select.append( $('<option></option>').html( '' ) );
-				$.each( options, function( index, element ) {
-					select.append(element);
-				});
-				select.bind('change', ticp.loadnext );
-				if ( select.find( 'option' ).length > 1 ) {
-					element.find( 'tr.headers' ).find( '#productid' ).show();
-					if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
-						select.attr( 'disabled', 'disabled' );
+				var optionsA = [], offset = -1,
+				callbackA = function () {
+					var selectA = $( '<select id="ticp" dropdownId="3"></select>' );
+					selectA.append( $('<option></option>').html( '' ) );
+					$.each( optionsA, function( index, element ) {
+						selectA.append(element);
+					});
+					selectA.bind('change', ticp.loadnext );
+					if ( selectA.find( 'option' ).length > 1 ) {
+						element.find( 'tr.headers' ).find( '#category' ).show();
+						element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( selectA ) );
+					} else {
+						element.parent().find(".ticp-warning").show("slow");
 					}
-					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
-				}
+
+					// code to show last dropdown
+					var optionsB = [],
+					callbackB = function () {
+						var selectB = $( '<select id="ticp" dropdownId="4"></select>' );
+						selectB.append( $('<option></option>').html( '' ) );
+						$.each( optionsB, function( index, element ) {
+							selectB.append(element);
+						});
+						selectB.bind('change', ticp.loadnext );
+						if ( selectB.find( 'option' ).length > 1 ) {
+							element.find( 'tr.headers' ).find( '#productid' ).show();
+							if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
+								selectB.attr( 'disabled', 'disabled' );
+							}
+							element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( selectB ) );
+						}
+					};
+					ticp.addDescendantsAndDirectChildren( selectedText, optionsB, true, callbackB );
+				};
+				ticp.addCategoryTree( selectedText, optionsA, offset, callbackA );
 			} else if ( dropdownId == 3 ) {
-				var options = [];
-				ticp.addDescendantsAndDirectChildren( selectedText, options, true );
-				var select = $( '<select id="ticp" dropdownId="4"></select>' );
-				select.append( $('<option></option>').html( '' ) );
-				$.each( options, function( index, element ) {
-					select.append(element);
-				});
-				select.bind('change', ticp.loadnext );
-				if ( select.find( 'option' ).length > 1 ) {
-					element.find( 'tr.headers' ).find( '#productid' ).show();
-					if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
-						select.attr( 'disabled', 'disabled' );
+				var optionsC = [],
+				callbackC = function () {
+					var selectC = $( '<select id="ticp" dropdownId="4"></select>' );
+					selectC.append( $('<option></option>').html( '' ) );
+					$.each( optionsC, function( index, element ) {
+						selectC.append(element);
+					});
+					selectC.bind('change', ticp.loadnext );
+					if ( selectC.find( 'option' ).length > 1 ) {
+						element.find( 'tr.headers' ).find( '#productid' ).show();
+						if ( element.find( 'tr.dropdowns' ).attr( 'disable_fourth_dropdown' ) == 1 ) {
+							selectC.attr( 'disabled', 'disabled' );
+						}
+						element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( selectC ) );
+					} else {
+						element.parent().find(".ticp-warning").show("slow");
 					}
-					element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
-				} else {
-					element.parent().find(".ticp-warning").show("slow");
-				}
+				};
+				ticp.addDescendantsAndDirectChildren( selectedText, optionsC, true, callbackC );
 			}
 			ticp.setFormInputValue( element, selectedText );
 
