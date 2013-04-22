@@ -10,7 +10,7 @@ var ticp = {
 	addNewDropDown: function( element, categoryName, position, tdID ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
-			async: true,
+			async: false,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
 				format: 'json',
@@ -52,88 +52,49 @@ var ticp = {
 		});
 	},
 
-	addCategoryTree: function( categoryName, options, offset, callback ) {
+	addCategoryTree: function( categoryName, options, callback ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
 			async: true,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
 				format: 'json',
-				action: 'query',
-				list: 'categorymembers',
-				cmtitle: 'Category:' + categoryName,
-				cmnamespace: 14,
-				cmlimit: 100000
+				action: 'categorytree',
+				title: 'Category:' + categoryName
 			},
 			dataType: 'json',
 			type: 'GET',
 			success: function( data ) {
-				if ( data && data.query && data.query.categorymembers ) {
-				console.log(counterA);
-					if (data.query.categorymembers.length == 0 ) {
-						counterA--;
-						if ( counterA == 0 ) {
-							callback();
-							counterA = 1;
-						}
-						return;
-					}
-					if ( offset !== -1 )
-						options.push( $('<option></option>').val( categoryName ).html( offset + categoryName ) );
-
-					if ( offset == -1 ) {
-						offset = '';
-					} else {
-						offset = offset  + '&nbsp;&nbsp;&nbsp;';
-					}
-					$.each( data.query.categorymembers, function( i, member ) {
-						subCategoryName = member.title.replace( 'Category:', '' );
-						counterA++;
-						ticp.addCategoryTree( subCategoryName, options, offset, callback );
+				if ( data && data.categorytree && data.categorytree.categorymembers ) {
+					$.each( data.categorytree.categorymembers, function( i, member ) {
+					console.log(member);
+						options.push( $('<option></option>').val( member.title ).html( member.offset + member.title ) );
 					});
-					counterA--;
-					if ( counterA == 0 ) {
-						callback();
-						counterA = 1;
-					}
 				}
+				callback();
 			}
 		});
 	},
 
-	addDescendantsAndDirectChildren: function( categoryName, options, firstcall, callback ) {
+	addDescendantsAndDirectChildren: function( categoryName, options, callback ) {
 		$.ajax({
 			url: wgScriptPath + "/api.php",
 			async: true,
 			data: {
 				// For parameter documentation, visit <http://en.wikipedia.org/w/api.php> and then search for "list=categorymembers"
 				format: 'json',
-				action: 'query',
-				list: 'categorymembers',
-				cmtitle: 'Category:' + categoryName,
-				cmnamespace: 14,
-				cmlimit: 100000
+				action: 'childandleafcategory',
+				title: 'Category:' + categoryName
 			},
 			dataType: 'json',
 			type: 'GET',
 			success: function( data ) {
-				if ( data && data.query && data.query.categorymembers ) {
-					if ( firstcall ) {
-						$.each( data.query.categorymembers, function( i, member ) {
-							subCategoryName = member.title.replace( 'Category:', '' );
-							counter++;
-							ticp.addDescendantsAndDirectChildren( subCategoryName, options, false, callback );
+				if ( data && data.childandleafcategory && data.childandleafcategory.categorymembers ) {
+						$.each( data.childandleafcategory.categorymembers, function( i, member ) {
+							options.push( $('<option></option>').val( member ).html( member ) );
 						});
-					}
-					counter--;
-					if (data.query.categorymembers.length == 0 && !firstcall) {
-						options.push( $('<option></option>').val( categoryName ).html( categoryName ) );
-					}
-					if ( counter == 0 ) {
-						callback();
-						counter = 1;
-					}
 				}
+				callback();
 			}
 		});
 	},
@@ -167,7 +128,7 @@ var ticp = {
 						element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 					}
 				};
-				ticp.addDescendantsAndDirectChildren( selectedText, options, true, callback );
+				ticp.addDescendantsAndDirectChildren( selectedText, options, callback );
 			} else if ( dropdownId === 2 ) {
 				var optionsA = [], offset = -1,
 				callbackA = function () {
@@ -201,9 +162,9 @@ var ticp = {
 							element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( selectB ) );
 						}
 					};
-					ticp.addDescendantsAndDirectChildren( selectedText, optionsB, true, callbackB );
+					ticp.addDescendantsAndDirectChildren( selectedText, optionsB, callbackB );
 				};
-				ticp.addCategoryTree( selectedText, optionsA, offset, callbackA );
+				ticp.addCategoryTree( selectedText, optionsA, callbackA );
 			} else if ( dropdownId == 3 ) {
 				var optionsC = [],
 				callbackC = function () {
@@ -223,7 +184,7 @@ var ticp = {
 						element.parent().find(".ticp-warning").show("slow");
 					}
 				};
-				ticp.addDescendantsAndDirectChildren( selectedText, optionsC, true, callbackC );
+				ticp.addDescendantsAndDirectChildren( selectedText, optionsC, callbackC );
 			}
 			ticp.setFormInputValue( element, selectedText );
 

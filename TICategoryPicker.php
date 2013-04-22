@@ -40,6 +40,13 @@ $ticpDir 		= dirname( __FILE__ ) . '/';
 
 $wgExtensionMessagesFiles['TI Category Picker'] = $ticpDir . 'TICategoryPicker.i18n.php';
 $wgAutoloadClasses['TICategoryPicker'] = $ticpDir . 'TICategoryPicker.class.php';
+$wgAutoloadClasses['ApiChildAndLeafCategory'] = $ticpDir . 'ApiChildAndLeafCategory.api.php';
+$wgAutoloadClasses['ApiCategoryTree'] = $ticpDir . 'ApiCategoryTree.api.php';
+
+
+// api modules
+$wgAPIModules['childandleafcategory'] = 'ApiChildAndLeafCategory';
+$wgAPIModules['categorytree'] = 'ApiCategoryTree';
 
 $egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TI-Category-Picker' : $wgExtensionAssetsPath . '/TI-Category-Picker';
 
