@@ -55,7 +55,6 @@ class ApiChildAndLeafCategory extends ApiBase {
 		return array(
 			'title' => array(
 				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => true,
 			)
 		);
 	}
