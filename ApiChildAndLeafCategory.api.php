@@ -11,8 +11,8 @@ class ApiChildAndLeafCategory extends ApiBase {
 		$requestParams = $this->extractRequestParams();
 		global $wgRequest;
 		$members = array();
-		$params = new DerivativeRequest(
-				$wgRequest,
+		$params = new FauxRequest(
+				// $wgRequest,
 				array(
 				  'action' => 'query',
 				  'list' => 'categorymembers',
@@ -26,8 +26,8 @@ class ApiChildAndLeafCategory extends ApiBase {
 		$data = & $api->getResultData();
 		foreach( $data['query']['categorymembers'] as $category ) {
 			$category = $category['title'];
-			$params = new DerivativeRequest(
-					$wgRequest,
+			$params = new FauxRequest(
+					// $wgRequest,
 					array(
 					  'action' => 'query',
 					  'list' => 'categorymembers',

@@ -11,8 +11,8 @@ class ApiCategoryTree extends ApiBase {
 		$requestParams = $this->extractRequestParams();
 		global $wgRequest;
 		$this->members = array();
-		$params = new DerivativeRequest(
-				$wgRequest,
+		$params = new FauxRequest(
+				// $wgRequest,
 				array(
 				  'action' => 'query',
 				  'list' => 'categorymembers',
@@ -36,8 +36,8 @@ class ApiCategoryTree extends ApiBase {
 
 	public function buildList( $category, $offset ) {
 		global $wgRequest;
-		$params = new DerivativeRequest(
-				$wgRequest,
+		$params = new FauxRequest(
+				// $wgRequest,
 				array(
 				  'action' => 'query',
 				  'list' => 'categorymembers',
