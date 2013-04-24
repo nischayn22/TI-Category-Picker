@@ -54,7 +54,7 @@ class ApiCategoryTree extends ApiBase {
 			$this->members[] = array( 'offset' => $offset , 'title' => $category );
 			foreach( $newdata['query']['categorymembers'] as $subCategory ) {
 				$subCategory = $subCategory['title'];
-				$this->buildList( $subCategory, $offset . '__' );
+				$this->buildList( $subCategory, $offset . '&nsbp;&nsbp;' );
 			}
 		}
 	}

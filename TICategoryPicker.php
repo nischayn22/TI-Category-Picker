@@ -48,7 +48,7 @@ $wgAutoloadClasses['ApiCategoryTree'] = $ticpDir . 'ApiCategoryTree.api.php';
 $wgAPIModules['childandleafcategory'] = 'ApiChildAndLeafCategory';
 $wgAPIModules['categorytree'] = 'ApiCategoryTree';
 
-$egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TI-Category-Picker' : $wgExtensionAssetsPath . '/TI-Category-Picker';
+$egTICPScriptPath = $wgExtensionAssetsPath === false ? $wgScriptPath . '/extensions/TICategoryPicker' : $wgExtensionAssetsPath . '/TICategoryPicker';
 
 if ( defined( 'MW_SUPPORTS_RESOURCE_MODULES' ) ) {
 	$moduleTemplate = array(

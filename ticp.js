@@ -8,6 +8,7 @@ var ticp = {
 	},
 
 	addNewDropDown: function( element, categoryName, position, tdID ) {
+		element.parent().find( ".ticp-spinner" ).show();
 		$.ajax({
 			url: wgScriptPath + "/api.php",
 			async: false,
@@ -34,11 +35,12 @@ var ticp = {
 					});
 					select.bind('change', ticp.loadnext );
 					if ( select.find( 'option' ).length > 1 ) {
-						element.find( 'tr.headers' ).find( '#'+tdID ).show();
-						element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
+						element.parent().find( 'tr.headers' ).find( '#'+tdID ).show();
+						element.parent().find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 					} else {
-						element.find( ".ticp-warning" ).show("slow");
+						element.parent().find( ".ticp-warning" ).show("slow");
 					}
+					element.parent().find( ".ticp-spinner" ).hide();
 				} else if ( data && data.error ) {
 					// Will this ever happen??
 					alert( 'Error: API returned error code "' + data.error.code + '": ' + data.error.info );
@@ -67,7 +69,6 @@ var ticp = {
 			success: function( data ) {
 				if ( data && data.categorytree && data.categorytree.categorymembers ) {
 					$.each( data.categorytree.categorymembers, function( i, member ) {
-					console.log(member);
 						options.push( $('<option></option>').val( member.title ).html( member.offset + member.title ) );
 					});
 				}
@@ -102,6 +103,7 @@ var ticp = {
 	loadnext: function( e, callback ) {
 		element = $( this ).closest( '.ticp' );
 		element.parent().find(".ticp-warning").hide("slow");
+		element.parent().find( ".ticp-spinner" ).hide();
 		_this = $( this );
 		selectedText = _this.find( ":selected" ).val();
 		dropdownId = parseInt( _this.attr( 'dropdownId' ) );
@@ -118,7 +120,6 @@ var ticp = {
 					$.each( options, function( index, element ) {
 						select.append(element);
 					});
-					console.log( select );
 					select.bind('change', ticp.loadnext );
 					if ( select.find( 'option' ).length > 1 ) {
 						element.find( 'tr.headers' ).find( '#productid' ).show();
@@ -127,7 +128,9 @@ var ticp = {
 						}
 						element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( select ) );
 					}
+					element.parent().find( ".ticp-spinner" ).hide();
 				};
+				element.parent().find( ".ticp-spinner" ).show();
 				ticp.addDescendantsAndDirectChildren( selectedText, options, callback );
 			} else if ( dropdownId === 2 ) {
 				var optionsA = [], offset = -1,
@@ -161,9 +164,11 @@ var ticp = {
 							}
 							element.find( 'tr.dropdowns' ).append( $( '<td/>' ) .append( selectB ) );
 						}
+						element.parent().find( ".ticp-spinner" ).hide();
 					};
 					ticp.addDescendantsAndDirectChildren( selectedText, optionsB, callbackB );
 				};
+				element.parent().find( ".ticp-spinner" ).show();
 				ticp.addCategoryTree( selectedText, optionsA, callbackA );
 			} else if ( dropdownId == 3 ) {
 				var optionsC = [],
@@ -183,7 +188,9 @@ var ticp = {
 					} else {
 						element.parent().find(".ticp-warning").show("slow");
 					}
+					element.parent().find( ".ticp-spinner" ).hide();
 				};
+				element.parent().find( ".ticp-spinner" ).show();
 				ticp.addDescendantsAndDirectChildren( selectedText, optionsC, callbackC );
 			}
 			ticp.setFormInputValue( element, selectedText );

@@ -115,6 +115,7 @@ class TICategoryPicker extends SFFormInput {
 	 *
 	 */
 	public function getHtmlText() {
+		global $egTICPScriptPath;
 
 		$fourthDropdownDisabled = 1;
 		if ( Title::newFromText('Permissions test')->userCan( 'delete' ) ) {
@@ -169,7 +170,8 @@ class TICategoryPicker extends SFFormInput {
 				</table>
 			</div>
 			<br />
-			<div class="ticp-warning"  style="clear:both;display:none;" ><b style="color:grey; display:block; padding:3px;" > No more categories </b></div>';
+			<div class="ticp-warning"  style="clear:both;display:none;" ><b style="color:grey; display:block; padding:3px;" > No more categories </b></div>
+			<div class="ticp-spinner"  style="clear:both;display:none;" ><b style="color:grey; display:block; padding:3px;" > loading... </b></div>';
 
 		return $html;
 	}
